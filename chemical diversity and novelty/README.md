@@ -11,4 +11,4 @@ Generating Uniform Manifold Approximation and Projection (UMAP) plot to show the
 #### RiPP_precursor_cluster_novelty.R
 Summarizing the novelty of RiPP family
 #### RiPP_family_novelty_bioactivity.R
-Summarizing the predicted bioactivity predicted by DeepBGC (https://github.com/Merck/deepbgc)
+Summarizing the bioactivity predicted by DeepBGC (https://github.com/Merck/deepbgc)
