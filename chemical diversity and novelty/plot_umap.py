@@ -2,19 +2,25 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import umap
+import pandas as pd
 
 
 def plot_umap(df_umap, file, title='UMAP'):
+    """
+    Create and save a UMAP plot from a given DataFrame.
+
+    Parameters:
+    df_umap (DataFrame): DataFrame containing UMAP-transformed data.
+    file (str): Path to save the UMAP plot.
+    title (str, optional): Title of the plot. Defaults to 'UMAP'.
+
+    Returns:
+    None
+    """
     plt.figure(figsize=(16, 16))
 
-    #labels = ['Autoinducing','Lanthipeptide','LAP','Lassopeptide','NtoC_cyclized_peptides','Other_Known_RiPP','PMCS_KP','PMCS_NL','RiPP_like','rSAM_modified_RiPP','unknown_RiPP']
-    #colors = ['#ca4656', '#ff81fb', '#009afb', '#9445fa', '#02316b', '#018f56', '#7e1606', '#989999', '#ff9123','#303841','#7f7f7f']
-
-    #labels = ['Known_RiPP','PMCS_KP','PMCS_NL','unknown_RiPP']
-    #colors = ['#018f56','#9445fa','#ca4656','#7f7f7f']
-    labels = ['RiPP_from_HM','RiPP_from_MIBIG']
-    colors = ['#000000','#ff001d']
-
+    labels = ['RiPP_from_HM', 'RiPP_from_MIBIG']
+    colors = ['#000000', '#ff001d']
 
     for color, i, label in zip(colors, range(1, 10), labels):
         plt.scatter(df_umap.loc[df_umap["prediction"] == label, ["umap1"]],
@@ -33,13 +39,23 @@ def plot_umap(df_umap, file, title='UMAP'):
 
     svg = str(file) + '.svg'
     png = str(file) + '.png'
-    #plt.savefig(svg, format="svg", transparent=True)
-    #plt.savefig(png, format="png", transparent=True)
     plt.savefig(svg, format="svg", transparent=False)
     plt.savefig(png, format="png", transparent=False)
 
 
 def draw_umap(df, file, metric='jaccard', title='UMAP'):
+    """
+    Compute UMAP and create a UMAP plot from a given DataFrame.
+
+    Parameters:
+    df (DataFrame): DataFrame containing original data with ECFP6 fingerprints.
+    file (str): Path to save the UMAP plot.
+    metric (str, optional): Metric used for UMAP. Defaults to 'jaccard'.
+    title (str, optional): Title of the plot. Defaults to 'UMAP'.
+
+    Returns:
+    None
+    """
     fit = umap.UMAP(metric=metric)
 
     ecfps = list(df["ECFP6"])
@@ -50,10 +66,8 @@ def draw_umap(df, file, metric='jaccard', title='UMAP'):
     df_umap = pd.concat([df, umap_df], axis=1)
     plt.figure(figsize=(24, 24))
 
-    #labels = ['Autoinducing','Lanthipeptide','LAP','Lassopeptide','NtoC_cyclized_peptides','Other_Known_RiPP','PMCS_KP','PMCS_NL','RiPP_like','rSAM_modified_RiPP','unknown_RiPP']
-    #colors = ['#ca4656', '#ff81fb', '#009afb', '#9445fa', '#02316b', '#018f56', '#7e1606', '#989999', '#ff9123','#303841','#7f7f7f']
-    labels = ['RiPP_from_HM','RiPP_from_MIBIG']
-    colors = ['#000000','#ff001d']   
+    labels = ['RiPP_from_HM', 'RiPP_from_MIBIG']
+    colors = ['#000000', '#ff001d']
 
     for color, i, label in zip(colors, range(1, 10), labels):
         plt.scatter(df_umap.loc[df_umap["prediction"] == label, ["umap1"]],
@@ -73,7 +87,6 @@ def draw_umap(df, file, metric='jaccard', title='UMAP'):
 
 if __name__ == '__main__':
     import argparse
-    import pandas as pd
 
     argparser = argparse.ArgumentParser(description="plot UMAP")
     argparser.add_argument("-i", "--input", required=True,
