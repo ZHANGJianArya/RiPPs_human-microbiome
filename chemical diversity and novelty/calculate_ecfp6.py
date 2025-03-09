@@ -11,12 +11,30 @@ from plot_umap import plot_umap
 
 
 def calc_ecfp6(peptides):
+    """
+    Calculate the ECFP6 fingerprint for peptides.
+
+    Args:
+        peptides (str): A string containing peptide sequences separated by newlines.
+
+    Returns:
+        list: A list of ECFP6 fingerprints.
+    """
     p = subprocess.run(["java", "-jar", "./peptideECFP6.jar"], encoding='utf-8', input=peptides,
                        stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     return p.stdout.split("\n")[:-1]
 
 
 def calc_pca(fingerprints: np.ndarray):
+    """
+    Perform PCA on the given fingerprints.
+
+    Args:
+        fingerprints (np.ndarray): A 2D numpy array of ECFP6 fingerprints.
+
+    Returns:
+        np.ndarray: The PCA-transformed data.
+    """
     pca = PCA(n_components=2)
     result = pca.fit_transform(fingerprints)
     print("explained variance ratio: ", pca.explained_variance_ratio_)
@@ -24,18 +42,28 @@ def calc_pca(fingerprints: np.ndarray):
 
 
 def calc_umap(fingerprints: np.ndarray, metric):
+    """
+    Perform UMAP on the given fingerprints.
+
+    Args:
+        fingerprints (np.ndarray): A 2D numpy array of ECFP6 fingerprints.
+        metric (str): The metric to use for UMAP.
+
+    Returns:
+        np.ndarray: The UMAP-transformed data.
+    """
     fit = umap.UMAP(metric=metric)
     u = fit.fit_transform(fingerprints)
     return u
 
 
 if __name__ == '__main__':
-    argparser = argparse.ArgumentParser(description="calculate ECFP6 fingerprint for peptides")
+    argparser = argparse.ArgumentParser(description="Calculate ECFP6 fingerprint for peptides")
     argparser.add_argument("-i", "--input", required=True,
-                           help="the input table file of peptide sequences, must has a column with name 'sequence'")
-    argparser.add_argument("-o", "--output", help="the output result file", required=True)
-    argparser.add_argument("-p", "--plot", help="plot pca and umap", action="store_true")
-    argparser.add_argument("-m", "--metric", choices=['euclidean', 'jaccard'], help="the metric used for umap",
+                           help="The input table file of peptide sequences, must have a column with name 'sequence'")
+    argparser.add_argument("-o", "--output", help="The output result file", required=True)
+    argparser.add_argument("-p", "--plot", help="Plot PCA and UMAP", action="store_true")
+    argparser.add_argument("-m", "--metric", choices=['euclidean', 'jaccard'], help="The metric used for UMAP",
                            default="jaccard")
     args = argparser.parse_args()
 
